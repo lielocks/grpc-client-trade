@@ -1,0 +1,36 @@
+server:
+  port: 9999  # RESTful API port
+
+grpc:
+  server:
+    port: 50052  # gRPC port
+  auth:
+    host: localhost
+    port: 50051
+  client:
+    security-grpc-server:
+      address: 'localhost:50051'
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      negotiationType: plaintext
+
+spring:
+  application:
+    name: security-grpc-client
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: ${properties.datasource.url}
+    username: ${properties.datasource.username}
+    password: ${properties.datasource.password}
+
+  redis:
+    host: localhost
+    port: 16379
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
