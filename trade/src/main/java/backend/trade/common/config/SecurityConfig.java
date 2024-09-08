@@ -34,16 +34,12 @@ public class SecurityConfig {
                 }
 
                 Metadata headers = new Metadata();
-                if (token != null) {
-                    Metadata.Key<String> authHeaderKey = Metadata.Key.of("Authorization", Metadata.ASCII_STRING_MARSHALLER);
-                    headers.put(authHeaderKey, "Bearer " + token);
-                }
+                Metadata.Key<String> authHeaderKey = Metadata.Key.of("Authorization", Metadata.ASCII_STRING_MARSHALLER);
+                headers.put(authHeaderKey, "Bearer " + token);
 
                 // gRPC 메타데이터에 추가
                 metadataApplier.apply(headers);
             }
-
-
             @Override
             public void thisUsesUnstableApi() {
             }
