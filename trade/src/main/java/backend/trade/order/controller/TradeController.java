@@ -21,7 +21,7 @@ import java.util.Map;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/order")
 public class TradeController {
 
     private final AuthClientService authClientService;
@@ -55,13 +55,13 @@ public class TradeController {
         return ResponseEntity.ok(order);
     }
 
-    @PatchMapping("/status")
+    @PatchMapping("/update")
     public ResponseEntity<Order> updateOrderStatus(@RequestHeader("Authorization") String token, @RequestBody OrderStatusUpdateDto updateRequest) {
         Order updatedOrder = orderService.updateOrderStatus(token, updateRequest);
         return ResponseEntity.ok(updatedOrder);
     }
 
-    @GetMapping("/orders")
+    @GetMapping("/list")
     public ResponseEntity<Map<String, Object>> getPagedOrders(@RequestHeader("Authorization") String token, @RequestBody OrderPageRequestDto requestDto) {
         LocalDateTime date = orderService.parseDateString(requestDto.getDateString());
 
