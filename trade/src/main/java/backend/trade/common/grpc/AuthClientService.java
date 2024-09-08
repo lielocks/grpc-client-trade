@@ -2,6 +2,7 @@ package backend.trade.common.grpc;
 
 import auth.Auth;
 import auth.AuthServiceGrpc;
+import backend.trade.common.constant.Constant;
 import io.grpc.ClientInterceptor;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -65,7 +66,7 @@ public class AuthClientService {
         if (response.getIsValid()) {
             return response.getUserId();
         } else {
-            throw new IllegalArgumentException("Invalid token");
+            throw new IllegalArgumentException(Constant.INVALID_ACCESS_TOKEN);
         }
     }
 

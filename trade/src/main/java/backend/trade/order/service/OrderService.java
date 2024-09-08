@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -59,13 +61,17 @@ public class OrderService {
         Long userId = extractAndVerifyToken(token, orderRequest.getUserId());
         String orderNumber = generateOrderNumber();
 
+        double roundedQuantity = BigDecimal.valueOf(orderRequest.getQuantity())
+                .setScale(2, RoundingMode.HALF_UP)
+                .doubleValue();
+
         Order order = Order.builder()
                 .id(orderNumber)
                 .userId(userId)
                 .invoice(orderRequest.getInvoice())
                 .orderDate(LocalDateTime.now())
                 .itemType(orderRequest.getItemType())
-                .quantity(orderRequest.getQuantity())
+                .quantity(roundedQuantity)
                 .shippingAddress(orderRequest.getShippingAddress())
                 .status(OrderStatus.ORDER_COMPLETED)
                 .build();

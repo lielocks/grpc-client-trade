@@ -18,7 +18,7 @@ public class Order {
 
     private LocalDateTime orderDate;
 
-    private Long userId;  // JWT 토큰에서 추출한 사용자 ID
+    private Long userId;  // JWT 토큰 검증 후 추출한 사용자 ID
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status; // Enum: ORDER_COMPLETED, PAYMENT_COMPLETED, SHIPPED for purchase; ORDER_COMPLETED, PAYMENT_RECEIVED, RECEIVED for sale
@@ -29,7 +29,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private Invoice invoice; // Enum: SELL, PURCHASE
 
-    private Double quantity; // 단위는 gram 소수점 두자리 (수량)
+    private Double quantity; // 단위는 gram 소수점 두자리, 단위 표시 단위 g 를 붙이는게 필요시 프론트단에서 처리
 
     private String shippingAddress;
 

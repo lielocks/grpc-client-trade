@@ -6,6 +6,7 @@ import backend.trade.order.dto.OrderStatusUpdateDto;
 import backend.trade.common.grpc.AuthClientService;
 import backend.trade.order.model.Order;
 import backend.trade.order.service.OrderService;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -42,8 +43,8 @@ public class TradeController {
                 log.warn("Token is INVALID OR EXPIRED");
                 return new ResponseEntity<>("Token is INVALID OR EXPIRED", HttpStatus.UNAUTHORIZED);
             }
-        } catch (IllegalArgumentException e) {
-            log.error("Invalid token :: {}", e.getMessage());
+        } catch (JwtException | IllegalArgumentException e) {
+            log.error("Verify 중 에러 :: {}", e.getMessage());
             return new ResponseEntity<>("INVALID TOKEN :: " + e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
