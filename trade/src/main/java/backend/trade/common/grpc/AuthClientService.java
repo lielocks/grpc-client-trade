@@ -2,7 +2,8 @@ package backend.trade.common.grpc;
 
 import auth.Auth;
 import auth.AuthServiceGrpc;
-import backend.trade.common.constant.Constant;
+import backend.trade.common.exception.CustomError;
+import backend.trade.common.exception.CustomException;
 import io.grpc.ClientInterceptor;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -66,7 +67,7 @@ public class AuthClientService {
         if (response.getIsValid()) {
             return response.getUserId();
         } else {
-            throw new IllegalArgumentException(Constant.INVALID_ACCESS_TOKEN);
+              throw new CustomException(CustomError.INVALID_ACCESS_TOKEN);
         }
     }
 

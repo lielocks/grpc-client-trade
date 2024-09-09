@@ -1,6 +1,7 @@
 package backend.trade.order.service;
 
-import backend.trade.order.constant.Constant;
+import backend.trade.common.exception.CustomError;
+import backend.trade.common.exception.CustomException;
 import backend.trade.order.dto.OrderRegisterRequestDto;
 import backend.trade.order.dto.OrderStatusUpdateDto;
 import backend.trade.common.grpc.AuthClientService;
@@ -21,8 +22,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
-
-import static backend.trade.order.constant.Constant.*;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +45,7 @@ public class OrderService {
         String token = authorizationHeader.substring(7);
         Long userId = authClientService.getUserIdFromToken(token);
         if (!authClientService.verifyToken(token) || !userId.equals(requestUserId)) {
-            throw new IllegalStateException(Constant.USER_NOT_AUTHENTICATED);
+            throw new CustomException(CustomError.USER_NOT_AUTHENTICATED);
         }
         return userId;
     }
@@ -84,7 +83,7 @@ public class OrderService {
         extractAndVerifyToken(token, updateRequest.getUserId());
 
         Order order = orderRepository.findById(updateRequest.getOrderId())
-                .orElseThrow(() -> new IllegalArgumentException(Constant.ORDER_NOT_FOUND));
+                        .orElseThrow(() -> new CustomException(CustomError.ORDER_NOT_FOUND));
 
         validateOrderStatusTransition(order.getInvoice(), order.getStatus(), updateRequest.getNewStatus());
         order.setStatus(updateRequest.getNewStatus());
@@ -110,7 +109,7 @@ public class OrderService {
                     if (newStatus == OrderStatus.SHIPPED) return;
                     break;
                 default:
-                    throw new IllegalStateException(STATUS_NOT_FOR_PURCHASE);
+                    throw new CustomException(CustomError.STATUS_NOT_FOR_PURCHASE);
             }
         } else if (invoice == Invoice.SELL) {
             switch (currentStatus) {
@@ -121,18 +120,18 @@ public class OrderService {
                     if (newStatus == OrderStatus.RECEIVED) return;
                     break;
                 default:
-                    throw new IllegalStateException(STATUS_NOT_FOR_SELL);
+                    throw new CustomException(CustomError.STATUS_NOT_FOR_SELL);
             }
         }
 
-        throw new IllegalArgumentException(STATUS_NOT_AVAILABLE);
+        throw new CustomException(CustomError.STATUS_NOT_AVAILABLE);
     }
 
 
     @Transactional(readOnly = true)
     public Order getPagedOrders(String token, LocalDateTime date, Invoice invoice) {
         Order order = orderRepository.findByOrderDateAndInvoice(date, invoice)
-                .orElseThrow(() -> new IllegalArgumentException(Constant.ORDER_NOT_FOUND));
+                        .orElseThrow(() -> new CustomException(CustomError.ORDER_NOT_FOUND));
         extractAndVerifyToken(token, order.getUserId());
         return order;
     }
