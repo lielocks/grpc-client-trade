@@ -2,6 +2,7 @@ package backend.trade.order.service;
 
 import backend.trade.common.exception.CustomError;
 import backend.trade.common.exception.CustomException;
+import backend.trade.order.dto.OrderDeleteRequestDto;
 import backend.trade.order.dto.OrderRegisterRequestDto;
 import backend.trade.order.dto.OrderStatusUpdateDto;
 import backend.trade.common.grpc.AuthClientService;
@@ -156,5 +157,13 @@ public class OrderService {
     public Page<Order> countPage(int offset, int limit) {
         Pageable pageable = PageRequest.of(offset, limit);
         return orderRepository.findAll(pageable);
+    }
+
+    @Transactional
+    public void deleteOrder(String token, OrderDeleteRequestDto requestDto) {
+        extractAndVerifyToken(token, requestDto.getUserId());
+        Order order = orderRepository.findByIdAndUserId(requestDto.getOrderId(), requestDto.getUserId())
+                .orElseThrow(() -> new CustomException(CustomError.FORBIDDEN_ORDER));
+        orderRepository.delete(order);
     }
 }

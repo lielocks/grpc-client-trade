@@ -1,5 +1,6 @@
 package backend.trade.order.controller;
 
+import backend.trade.order.dto.OrderDeleteRequestDto;
 import backend.trade.order.dto.OrderPageRequestDto;
 import backend.trade.order.dto.OrderRegisterRequestDto;
 import backend.trade.order.dto.OrderStatusUpdateDto;
@@ -137,5 +138,28 @@ public class TradeController {
         response.put("links", orderService.buildPaginationLinks(orderPage, date, requestDto.getLimit(), requestDto.getOffset(), requestDto.getInvoice()));
 
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/delete")
+    @Operation(summary = "주문 삭제",
+            description = "헤더의 토큰을 통해 사용자를 인증한 후 자신의 주문 내역을 삭제하는 API 입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "주문이 성공적으로 삭제되었습니다.",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "1001", description = "유효하지 않은 사용자입니다.",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "1000", description = "유효하지 않은 액세스 토큰입니다.",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "2005", description = "해당 주문을 삭제하실 수 있는 권한이 없습니다.",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "5003", description = "지원되지 않는 요청 방법입니다.",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "5000", description = "알 수 없는 문제가 발생했습니다.",
+                    content = @Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<String> updateOrderStatus(@RequestHeader("Authorization") String token,
+                                               @RequestBody OrderDeleteRequestDto deleteRequestDto) {
+        orderService.deleteOrder(token, deleteRequestDto);
+        return ResponseEntity.ok("ok");
     }
 }

@@ -13,6 +13,7 @@ public enum CustomError {
     STATUS_NOT_AVAILABLE(2002, "해당 주문의 상태를 다시 확인해주세요.", HttpStatus.BAD_REQUEST.value()),
     STATUS_NOT_FOR_SELL(2003, "판매 타입에 해당하지 않는 주문 상태입니다.", HttpStatus.BAD_REQUEST.value()),
     STATUS_NOT_FOR_PURCHASE(2004, "구매 타입에 해당하지 않는 주문 상태입니다.", HttpStatus.BAD_REQUEST.value()),
+    FORBIDDEN_ORDER(2005, "해당 주문에 대한 권한이 없습니다.", HttpStatus.FORBIDDEN.value()),
 
     // 공통
     SERVER_ERROR(5000, "알수 없는 문제가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR.value()),

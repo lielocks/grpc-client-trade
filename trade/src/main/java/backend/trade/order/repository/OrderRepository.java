@@ -11,4 +11,5 @@ import java.util.Optional;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, String> {
     Optional<Order> findByOrderDateAndInvoice(LocalDateTime orderDate, Invoice invoice);
+    Optional<Order> findByIdAndUserId(String id, Long userId);
 }
